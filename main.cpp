@@ -320,9 +320,8 @@ void merlin(string merlin_pack,int &HP,int MaxHP){
   }
   inMerlin.close();
 }
-void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, int & maidenkiss, int & phoenixdown, int & rescue) 
-{
-    /*Xu li file IO*/
+void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, int & maidenkiss, int & phoenixdown, int & rescue) {
+    /*Khai báo biến mặc định */
     int map[10000];
     int knight_info[5];
     rescue=-1;
@@ -343,240 +342,227 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
     int c1;
     int Arthur=0;
     int people;
+    int Merlin=0;
+    int j=1;
+    int asclepius=0;
+    int small;
+    int large;
+    /*Đọc file*/
+    /*----Khai báo biến------*/
     string line;
     string line2;
     string mush_ghost;
     string merlin_pack;
     string asclepius_pack;
-    int large;
-    int small;
-    int Merlin=0;
-    int j=1;
-    int asclepius=0;
-    //xu li file
+    int knigthLength;
+    int mapLength;
+    /*----Xử lí file--------*/
     ifstream inFile(file_input);
     if (!inFile.is_open()) {
         rescue=0;
     }
     getline(inFile,line);
-    int knigthLength;
     knigthLength = readNumber(knight_info,line);
     getline(inFile,line2);
-    int mapLength;
     mapLength = readNumber(map,line2);
     getline(inFile,mush_ghost,',');
     getline(inFile,merlin_pack,',');
     getline(inFile,asclepius_pack);
     inFile.close();
-    /*Thong tin hiep si*/
+    /*Thông tin hiệp sĩ*/
     HP=knight_info[1];
     level=knight_info[2];
     remedy=knight_info[3];
     maidenkiss=knight_info[4];
     phoenixdown=knight_info[5];
-    // cout<<line<<endl;
-    // cout<<line2<<endl;
-    // cout<<mush_ghost<<" "<<merlin_pack<<" "<<asclepius_pack<<endl;
     int const MaxHP=HP;
+    /*khai bao cac biên dếm*/
     int check_people=0;
-    int counter=0;
+    int counter=1;
     int check_frog=0;
     int counterf=0;
     int regLevel=level;
     int Lancelot=0;
     int iString=2;
-  if(HP==999){
-    Arthur=1;
-  }
-  if(prime(HP)){
-    Lancelot=1;
-  }
-  if(Arthur==0 && Lancelot==0){
-    people=1;
-  }
-  while(rescue == -1){
-    switch (map[local]) {
-    case 0:
-      rescue = 1;
-      break;
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-      if(Lancelot==1 || Arthur==1){
-        level++;
-        checkLevel(level);
-        break;
-      }
-      levelO=lvO(local);
-      solo = sl(levelO,level);
-      if(solo == 1){
-        level++;
-        checkLevel(level);
-      } else if (solo == 0){
-        // Không làm gì cả
-      } else if (solo == -1){
-        HP = damage1to5(HP,levelO,phoenixdown,MaxHP,map[local],rescue);
-        // cout<<HP;
-        checkHP(HP,rescue,phoenixdown,check_people,MaxHP,counter);
-      }
-      break;
-      // cout<<level;
-    case 6:
-      if(Lancelot==1 || Arthur==1){
-        level+=2;
-        checkLevel(level);
-        break;
-      }
-      levelO=lvO(local);
-      solo = sl(levelO,level);
-      if(solo == 1){
-        level+=2;
-        checkLevel(level);
-      } else if (solo == 0){
-        // Không làm gì cả
-      } else if (solo == -1){
-        check_people=1;
-        counter=4;
-        int HP_pre=HP;
-        HP=lowpeopleHP(HP);
-        if(remedy >= 1){
-          check_people = 0;
-          remedy--;
-          counter=0;
-          HP=HP_pre;
-        } else {
-          if(HP<=0 && phoenixdown>0){
-            check_people = 0;
-            phoenixdown--;
-            HP=MaxHP;
-          } else if(HP<=0 && phoenixdown<0){
-            rescue=0;
-          }
-        }
-      }
-    case 7:
-      if(Lancelot==1 || Arthur==1){
-        level+=2;
-        checkLevel(level);
-        break;
-      }
-      levelO=lvO(local);
-      solo = sl(levelO,level);
-      if(solo == 1){
-        level+=2;
-        checkLevel(level);
-      } else if (solo == 0){
-        // Không làm gì cả
-      } else if (solo == -1){
-        check_frog=1;
-        counterf=4;
-        regLevel=level;
-        level=1;
-        if(maidenkiss > 0){
-          maidenkiss--;
-          level=regLevel;
-          check_frog=0;
-        } else;
-      }
-      break;
-    case 11:
-      HP=MushMario(level,phoenixdown,HP,MaxHP);
-      break;
-    case 12:
-      HP=Fibonacci_MushFibo(HP);
-      break;
-    case 15:
-      clam(remedy);
-      break;
-    case 16:
-      clam(maidenkiss);
-      break;
-    case 17:
-      clam(phoenixdown);
-      break;
-    case 18:
-      if(Merlin!=1){
-        merlin(merlin_pack,HP,MaxHP);
-        Merlin=1;
-      }
-      break;
-    case 19:
-      if(asclepius!=1){
-        Asclepius(asclepius_pack,r1,c1,remedy,maidenkiss,phoenixdown);
-        asclepius=1;
-      }
-      break;
-    case 99:
-      if(Arthur==1 || Lancelot==1){
-        if(level>=8){
-          level=10;
-          rescue=-1;
-        } else rescue=0;
-      } else if(people==1){
-        if(level==10){
-          rescue=-1;
-        } else if(level<10) rescue=0; else;
-      } else;
-      break;
-    default:
-      string myString = to_string(map[local]);
-      if(myString.find("13")==0){
-        while(myString[iString]){
-           if(HP > MaxHP){
-              HP=MaxHP;
-            } else if(HP < 0 && phoenixdown>0){
-              phoenixdown--;
-              HP=MaxHP;
+    /*Xử lí trò chơi*/
+    if(HP==999) Arthur=1;
+    if(prime(HP)) Lancelot=1;
+    while(rescue == -1){
+        switch (map[local]) {
+        case 0:
+            rescue = 1;
+            break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            if(Arthur==1 || Lancelot==1) {
+                level++;
+                break;
+            }
+            levelO=lvO(local);
+            solo = sl(levelO,level);
+            if(solo == 1){
+                level++;
+            } else if (solo == 0){
+                // Không làm gì cả
+            } else if (solo == -1){
+                HP = damage1to5(HP,levelO,phoenixdown,MaxHP,map[local],rescue);
+            } else ;
+            break;
+        case 6:
+            if(Arthur==1 || Lancelot==1) {
+                level+=2;
+                break;
+            }
+            if(check_frog==1 || check_people==1) break;
+            levelO=lvO(local);
+            solo = sl(levelO,level);
+            if(solo == 1){
+                level+=2;
+            } else if (solo == 0){
+                // Không làm gì cả
+            } else if (solo == -1){
+                check_people=1;
+                counter=4;
+                int HP_pre=HP;
+                HP=lowpeopleHP(HP);
+                if( remedy >= 1){
+                    check_people = 0;
+                    remedy--;
+                    counter=0;
+                    HP=HP_pre;
+                } else {
+                    if(HP<=0 && phoenixdown>0){
+                        check_people = 0;
+                        counter=0;
+                        phoenixdown--;
+                        HP=MaxHP;
+                    } else if(HP<=0 && phoenixdown<0) rescue=0;
+                }
+            }
+            break;
+        case 7:
+            if(Arthur==1 || Lancelot==1) {
+                level+=2;
+                break;
+            }
+            if(check_frog==1 || check_people==1) break;
+            levelO=lvO(local);
+            solo = sl(levelO,level);
+            if(solo == 1){
+                level+=2;
+            } else if (solo == 0){
+                // Không làm gì cả
+            } else if (solo == -1){
+                check_frog=1;
+                counterf=4;
+                regLevel=level;
+                level=1;
+                if(maidenkiss > 0){
+                    maidenkiss--;
+                    level=regLevel;
+                    check_frog=0;
+                } else;
+            }
+            break;
+        case 11:
+            HP=MushMario(level,phoenixdown,HP,MaxHP);
+            break;
+        case 12:
+            HP=Fibonacci_MushFibo(HP);
+            break;
+        case 15:
+            clam(remedy);
+            break;
+        case 16:
+            clam(maidenkiss);
+            break;
+        case 17:
+            clam(phoenixdown);
+            break;
+        case 18:
+            if(Merlin!=1){
+                merlin(merlin_pack,HP,MaxHP);
+                Merlin=1;
+            }
+            break;
+        case 19:
+            if(asclepius!=1){
+                Asclepius(asclepius_pack,r1,c1,remedy,maidenkiss,phoenixdown);
+                asclepius=1;
+            }
+            break;
+        case 99:
+            if(Arthur==1 || Lancelot==1){
+                if(level>=8){
+                level=10;
+                rescue=-1;
+                } else rescue=0;
             } else {
-              rescue=0;
-              break;
-          }
-          switch(myString[iString])
-          {
-            case '1':
-              MushGhost(mush_ghost,len,n2);
-              large=len[0];
-              small=len[0];
-              for (int l=0;l<n2;l++){
-                if(len[l]<=small) {
-                  small=len[l];
-                  mini=l;
-                  } else ;
-                  if(len[l]>=large){
-                 large=len[l];
-                  maxi=l;
-                } else ;
-              }
-              HP=HP-(maxi+mini);
-              break;
-            case '2':
-              MushGhost(mush_ghost,len,n2);
-              checkMountain(len,n2,mtx,mti);
-              HP = HP - (mtx + mti);
-              break;
-            case '3':
-              MushGhost(mush_ghost,len,n2);
-              checkMush3_4(len,n2,maxi2,mini2,max2_3x,max2_3i);
-              HP= HP - (maxi2+mini2);
-              break;
-            case '4':
-              MushGhost(mush_ghost,len,n2);
-              checkMush3_4(len,n2,maxi2,mini2,max2_3x,max2_3i);
-              HP=HP - (max2_3x+max2_3i);
-              break;
-            default:
-              break;
-          }
-          iString++;
-          if(rescue==0) break;
+                if(level==10){
+                rescue=-1;
+                } else if(level<10) rescue=0; else;
+            } 
+            break;
+        default:
+            string myString = to_string(map[local]);
+            if(myString.find("13")==0){
+                while(myString[iString]){
+                    if(HP > MaxHP) HP=MaxHP; else if(HP < 0 && phoenixdown>0){
+                    phoenixdown--;
+                    check_people = 0;
+                    counter=0;
+                    HP=MaxHP;
+                    } else if (HP<0){
+                        rescue = 0;
+                        break;
+                    } else ;
+                    switch (myString[iString]){
+                        case '1':
+                            MushGhost(mush_ghost,len,n2);
+                            large=len[0];
+                            small=len[0];
+                            for (int l=0;l<n2;l++){
+                                if(len[l]<=small) {
+                                    small=len[l];
+                                    mini=l;
+                                } else ;
+                                if(len[l]>=large){
+                                    large=len[l];
+                                    maxi=l;
+                                } else ;
+                            }
+                            HP=HP-(maxi+mini);
+                            break;
+                        case '2':
+                            MushGhost(mush_ghost,len,n2);
+                            checkMountain(len,n2,mtx,mti);
+                            cout<<mtx<<" "<<mti<<endl;
+                            HP = HP - (mtx + mti);
+                            break;
+                        case '3':
+                            MushGhost(mush_ghost,len,n2);
+                            checkMush3_4(len,n2,maxi2,mini2,max2_3x,max2_3i);
+                            HP= HP - (maxi2+mini2);
+                            break;
+                        case '4':
+                            MushGhost(mush_ghost,len,n2);
+                            checkMush3_4(len,n2,maxi2,mini2,max2_3x,max2_3i);
+                            HP=HP - (max2_3x+max2_3i);
+                            break;
+                        default:
+                            break;
+                    }
+                iString++;
+                if(rescue==0) break;
+                }
+            }
+            break;
         }
-
-      }
-      break;
-    }
-    local++;
+    local++;  
+    /*kiểm tra còn trạng thái ếch và người tí hon không*/
     if(counter==1 && check_people==1){
       check_people=0;
       HP=HP*5;
@@ -585,30 +571,17 @@ void adventureToKoopa(string file_input, int & HP, int & level, int & remedy, in
       }
     } else if(counter!=0){
       counter--;
-    };
+    } else ;
     if(check_frog==1 && counterf==1){
       check_frog =0;
       level=regLevel;
     } else if(counterf!=0){
       counterf--;
-    }
-    if(check_frog==1 && maidenkiss > 0){
-      maidenkiss--;
-      level=regLevel;
-      check_frog=0;
-      counterf=0;
-    }
-    if(check_people == 1 && remedy>0){
-      check_people=0;
-      phoenixdown--;
-      HP=HP*5;
-      if(HP>MaxHP){
-        HP=MaxHP;
-      }
-      counter=0;
-    }
+    } else ;
+    cure(check_people,check_frog, maidenkiss, remedy, regLevel,counter,counterf, HP ,level);
+    checkLevel(level);
     checkHP(HP,rescue,phoenixdown,check_people,MaxHP,counter);
-    if(local==mapLength && rescue==-1) rescue=1;
+    if(local == mapLength && rescue==-1) rescue=1;
     display(HP, level, remedy, maidenkiss, phoenixdown, rescue);
-  }
+    }
 }
